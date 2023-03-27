@@ -1,0 +1,10 @@
+.search-box-container {
+  position: absolute;
+  background-color: white;
+  /* width: 30%; */
+  border: 1px solid red;
+  z-index: 1;
+  width: 15%;
+  height:20%;
+  overflow-y: scroll;
+}
