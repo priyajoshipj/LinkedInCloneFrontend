@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./styles.css";
 import {
   Box,
@@ -12,6 +12,7 @@ import {
   useMediaQuery,
   FormGroup,
   Button,
+  Icon,
 } from "@mui/material";
 import {
   Search,
@@ -22,14 +23,17 @@ import {
   Help,
   Menu,
   Close,
+  Delete,
+  Clear,
 } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
 import { setMode, setLogout } from "state";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import FlexBetween from "components/FlexBetween";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
+import Avatar from "react-avatar";
 
 const Navbar = () => {
   const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false);
@@ -52,7 +56,7 @@ const Navbar = () => {
   const InputCSS = {
     width: '100%',
     textIndent: '0px',
-    py:'5px',
+    py: '5px',
     fontSize: '15px'
   }
 
@@ -61,12 +65,22 @@ const Navbar = () => {
       setSearch(value);
       getSearchResult(value);
     }
+    else {
+      setSearch("");
+      setSearchUserList([]);
+    }
   };
 
   const navigateHome = () => {
     // 👇️ navigate to /
     navigate('/home');
   };
+
+  const routeChange = (userId) => {
+    let path = `/profile/${userId}`;
+    navigate(path);
+    navigate(0);
+  }
 
   const getSearchResult = async (values) => {
     const savedUserResponse = await fetch(
@@ -85,7 +99,7 @@ const Navbar = () => {
   //setSearch
   return (
     <FlexBetween padding="1rem 6%" backgroundColor={alt}>
-      <FlexBetween gap="1.75rem">
+      <FlexBetween gap="1.75rem" height={"7vh"}>
         <Button
           onClick={() => navigateHome()}
         >
@@ -101,7 +115,7 @@ const Navbar = () => {
             <FlexBetween
               backgroundColor={neutralLight}
               borderRadius="9px"
-              // gap="3rem"
+              gap="2rem"
               padding="0.1rem 1rem"
               marginTop="1.7vh"
             >
@@ -114,14 +128,21 @@ const Navbar = () => {
                   ...InputCSS,
                 }}
               />
+              <Icon>
+                <Clear
+                  className="clear-search"
+                  onClick={() => handlerSearch("")}
+                ></Clear>
+              </Icon>
             </FlexBetween>
           )}
           <List class={searchUserList.length > 0 ? "search-box-container" : ""}>
             {searchUserList &&
               searchUserList?.map(
-                ({ firstName, lastName, occupation, location }) => {
+                ({ _id, firstName, lastName, occupation, location, picturePath }) => {
                   return (
-                    <button onClick={() => console.log("heiehifef")}>
+                    <button className="btn-list primary" onClick={() => routeChange(_id)}>
+                      <img src={('http://localhost:3001/assets/' + picturePath)} className="img-profile" />
                       <ListItemText
                         primary={`${firstName} ${lastName}`}
                         secondary={`${occupation}-${location}`}
@@ -135,7 +156,8 @@ const Navbar = () => {
       </FlexBetween>
 
       {/* DESKTOP NAV */}
-      {isNonMobileScreens ? (
+      {
+        isNonMobileScreens ? (
           <FlexBetween gap="2rem">
             <IconButton onClick={() => dispatch(setMode())}>
               {theme.palette.mode === "dark" ? (
@@ -178,10 +200,12 @@ const Navbar = () => {
           >
             <Menu />
           </IconButton>
-        )}
+        )
+      }
 
       {/* MOBILE NAV */}
-      {!isNonMobileScreens && isMobileMenuToggled && (
+      {
+        !isNonMobileScreens && isMobileMenuToggled && (
           <Box
             position="fixed"
             right="0"
@@ -250,8 +274,9 @@ const Navbar = () => {
               </FormControl>
             </FlexBetween>
           </Box>
-        )}
-    </FlexBetween>
+        )
+      }
+    </FlexBetween >
   );
 };
 
