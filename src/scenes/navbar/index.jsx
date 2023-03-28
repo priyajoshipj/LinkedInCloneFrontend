@@ -49,6 +49,12 @@ const Navbar = () => {
 
   const fullName = `${user.firstName} ${user.lastName}`;
   const token = useSelector((state) => state.token);
+  const InputCSS = {
+    width: '100%',
+    textIndent: '0px',
+    py:'5px',
+    fontSize: '15px'
+  }
 
   const handlerSearch = (value) => {
     if (value) {
@@ -95,13 +101,18 @@ const Navbar = () => {
             <FlexBetween
               backgroundColor={neutralLight}
               borderRadius="9px"
-              gap="3rem"
-              padding="0.1rem 1.5rem"
+              // gap="3rem"
+              padding="0.1rem 1rem"
+              marginTop="1.7vh"
             >
               <InputBase
                 placeholder="Search..."
                 value={search}
                 onChange={(e) => handlerSearch(e.target.value)}
+                autoFocus
+                sx={{
+                  ...InputCSS,
+                }}
               />
             </FlexBetween>
           )}
