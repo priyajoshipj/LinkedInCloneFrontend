@@ -33,7 +33,7 @@ import FlexBetween from "components/FlexBetween";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
-import Avatar from "react-avatar";
+import Debounce from "../../components/Debounce";
 
 const Navbar = () => {
   const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false);
@@ -53,23 +53,6 @@ const Navbar = () => {
 
   const fullName = `${user.firstName} ${user.lastName}`;
   const token = useSelector((state) => state.token);
-  const InputCSS = {
-    width: '100%',
-    textIndent: '0px',
-    py: '5px',
-    fontSize: '15px'
-  }
-
-  const handlerSearch = (value) => {
-    if (value) {
-      setSearch(value);
-      getSearchResult(value);
-    }
-    else {
-      setSearch("");
-      setSearchUserList([]);
-    }
-  };
 
   const navigateHome = () => {
     // 👇️ navigate to /
@@ -80,21 +63,40 @@ const Navbar = () => {
     let path = `/profile/${userId}`;
     navigate(path);
     navigate(0);
-  }
+  };
 
-  const getSearchResult = async (values) => {
-    const savedUserResponse = await fetch(
-      `http://localhost:3001/users/${values}/searchUser`,
-      {
-        method: "GET",
-        headers: { Authorization: `Bearer ${token}` },
-      }
-    );
-    const data = await savedUserResponse.json();
-    if (data.length > 0) {
-      setSearchUserList([...data]);
+  const onKeyDown = (e) => {
+    if (e.keyCode === 8 && e.currentTarget.value.length <= 1){
+      setSearchUserList([]);
+      setInputText(e.keyCode);
     }
   };
+
+  const getSearchResult = async (values) => {
+    let data = [];
+    if (values.length > 0 && values !== 8) {
+      const savedUserResponse = await fetch(
+        `http://localhost:3001/users/${values}/searchUser`,
+        {
+          method: "GET",
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      try {
+        data = await savedUserResponse.json();
+      }
+      catch (err) {
+        console.log(err);
+      }
+    }
+
+    data.length > 0 ? setSearchUserList([...data]) : setSearchUserList([]);
+  };
+
+  // const debounceGetSearch = Debounce(getSearchResult, 500);
+  const useSearchStarwarsHero = () => Debounce((text) => getSearchResult(text));
+  const { inputText, setInputText } = useSearchStarwarsHero();
 
   //setSearch
   return (
@@ -104,7 +106,7 @@ const Navbar = () => {
           onClick={() => navigateHome()}
         >
           <i
-            class="fa fa-linkedin"
+            className="fa fa-linkedin"
             aria-hidden="true"
             style={{ color: "#0077b5", fontSize: 50 }}
           ></i>
@@ -119,31 +121,37 @@ const Navbar = () => {
               padding="0.1rem 1rem"
               marginTop="1.7vh"
             >
-              <InputBase
+              <input
+                className="MuiInputBase-input css-yz9k0d-MuiInputBase-input input-name"
                 placeholder="Search..."
-                value={search}
-                onChange={(e) => handlerSearch(e.target.value)}
-                autoFocus
-                sx={{
-                  ...InputCSS,
-                }}
-              />
+                type="text"
+                value={inputText.length > 0 ? inputText : ""}
+                onChange={(e) => setInputText(e.currentTarget.value)}
+                onKeyDown={(e) => onKeyDown(e)}
+                // onKeyUp={(e) =>
+                //   debounceGetSearch(e.target.value)
+                // }
+                autoFocus />
               <Icon>
-                <Clear
-                  className="clear-search"
-                  onClick={() => handlerSearch("")}
-                ></Clear>
+                {
+                  inputText.length > 0 &&
+                  <Clear
+                    className="clear-search"
+                    onClick={() => (setInputText(""), setSearchUserList([]))}
+                  ></Clear>
+                }
               </Icon>
             </FlexBetween>
           )}
-          <List class={searchUserList.length > 0 ? "search-box-container" : ""}>
+          <List className={searchUserList.length > 0 ? "search-box-container" : ""}>
             {searchUserList &&
               searchUserList?.map(
                 ({ _id, firstName, lastName, occupation, location, picturePath }) => {
                   return (
-                    <button className="btn-list primary" onClick={() => routeChange(_id)}>
+                    <button className="btn-list primary" key={_id + 1} onClick={() => routeChange(_id)}>
                       <img src={('http://localhost:3001/assets/' + picturePath)} className="img-profile" />
                       <ListItemText
+                        className="lst-items"
                         primary={`${firstName} ${lastName}`}
                         secondary={`${occupation}-${location}`}
                       />
