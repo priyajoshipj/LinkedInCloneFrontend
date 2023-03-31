@@ -5,7 +5,7 @@
   box-shadow: 0 10px 10px rgb(0, 119, 181, 0.5) !important;
   border-radius: 2% !important;
   z-index: 1 !important;
-  width: 16% !important;
+  width: 18% !important;
   height: auto !important;
   overflow-y: scroll !important;
   padding-bottom: 0.4% !important;
@@ -53,6 +53,21 @@
   text-align: right;
 }
 
-.input-name{
+.input-name {
   height: 2.4375em !important;
+}
+
+ul .btn-friend-request {
+  padding: 18% !important;
+  position: absolute !important;
+  margin-left: 1.2vw !important;
+  /* margin-top: -7vh !important; */
+}
+
+ul .div-friend-request {
+  z-index: 1 !important;
+  position: absolute !important;
+  width: 18% !important;
+  float: right !important;
+  margin-top: -3.5vh !important;
 }

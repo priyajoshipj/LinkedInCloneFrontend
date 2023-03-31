@@ -11,6 +11,7 @@ import WidgetWrapper from "components/WidgetWrapper";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import FriendRequest from "components/FriendRequest";
 
 const UserWidget = ({ userId, picturePath }) => {
   const [user, setUser] = useState(null);
@@ -20,6 +21,7 @@ const UserWidget = ({ userId, picturePath }) => {
   const dark = palette.neutral.dark;
   const medium = palette.neutral.medium;
   const main = palette.neutral.main;
+  const currentUser = useSelector((state) => state.user);
 
   const getUser = async () => {
     const response = await fetch(`http://localhost:3001/users/${userId}`, {
@@ -52,6 +54,7 @@ const UserWidget = ({ userId, picturePath }) => {
     <WidgetWrapper>
       {/* FIRST ROW */}
       <FlexBetween
+        className="divUserWidget"
         gap="0.5rem"
         pb="1.1rem"
         onClick={() => navigate(`/profile/${userId}`)}
@@ -76,6 +79,7 @@ const UserWidget = ({ userId, picturePath }) => {
           </Box>
         </FlexBetween>
         <ManageAccountsOutlined />
+        {(currentUser._id !== userId) && <FriendRequest friendId={userId} />}
       </FlexBetween>
 
       <Divider />
