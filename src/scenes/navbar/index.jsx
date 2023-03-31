@@ -34,11 +34,11 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import Debounce from "../../components/Debounce";
+import FriendRequest from "components/FriendRequest";
 
 const Navbar = () => {
   const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false);
   const [searchUserList, setSearchUserList] = useState([]);
-  const [search, setSearch] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector((state) => state.user);
@@ -66,7 +66,7 @@ const Navbar = () => {
   };
 
   const onKeyDown = (e) => {
-    if (e.keyCode === 8 && e.currentTarget.value.length <= 1){
+    if (e.keyCode === 8 && e.currentTarget.value.length <= 1) {
       setSearchUserList([]);
       setInputText(e.keyCode);
     }
@@ -148,14 +148,17 @@ const Navbar = () => {
               searchUserList?.map(
                 ({ _id, firstName, lastName, occupation, location, picturePath }) => {
                   return (
-                    <button className="btn-list primary" key={_id + 1} onClick={() => routeChange(_id)}>
-                      <img src={('http://localhost:3001/assets/' + picturePath)} className="img-profile" />
-                      <ListItemText
-                        className="lst-items"
-                        primary={`${firstName} ${lastName}`}
-                        secondary={`${occupation}-${location}`}
-                      />
-                    </button>
+                    <>
+                      <button className="btn-list primary" key={_id + 1} onClick={() => routeChange(_id)}>
+                        <img src={('http://localhost:3001/assets/' + picturePath)} className="img-profile" />
+                        <ListItemText
+                          className="lst-items"
+                          primary={`${firstName} ${lastName}`}
+                          secondary={`${occupation}-${location}`}
+                        />
+                      </button>
+                      {(user._id !== _id) && <FriendRequest friendId={_id} />}
+                    </>
                   );
                 }
               )}
@@ -273,7 +276,7 @@ const Navbar = () => {
                   input={<InputBase />}
                 >
                   <MenuItem value={fullName}>
-                    <Typography>{fullName}</Typography>
+                    <Typography>{fullName.split(' ').slice(0, -1).join(' ')}</Typography>
                   </MenuItem>
                   <MenuItem onClick={() => dispatch(setLogout())}>
                     Log Out
