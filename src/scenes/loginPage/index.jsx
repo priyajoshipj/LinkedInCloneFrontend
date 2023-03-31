@@ -13,7 +13,7 @@ const LoginPage = () => {
         textAlign="center"
       >
         <i
-          class="fa fa-linkedin"
+          className="fa fa-linkedin"
           aria-hidden="true"
           style={{ color: "#0077b5", fontSize: 50 }}
         ></i>

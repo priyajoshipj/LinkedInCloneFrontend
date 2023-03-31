@@ -1,10 +1,58 @@
 .search-box-container {
+  position: absolute !important;
+  background-color: white !important;
+  background-color: rgba(0, 119, 181, 0.5) !important;
+  box-shadow: 0 10px 10px rgb(0, 119, 181, 0.5) !important;
+  border-radius: 2% !important;
+  z-index: 1 !important;
+  width: 16% !important;
+  height: auto !important;
+  overflow-y: scroll !important;
+  padding-bottom: 0.4% !important;
+  padding-left: 2.5% !important;
+}
+
+.btn-list {
+  margin: 4% 0% 0% -14% !important;
+  position: relative !important;
+  width: 110%;
+}
+
+.img-profile {
   position: absolute;
-  background-color: white;
-  /* width: 30%; */
-  border: 1px solid red;
-  z-index: 1;
-  width: 15%;
-  height:20%;
-  overflow-y: scroll;
+  left: 3%;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  border-radius: 20px;
+  height: 4.5vh;
+  width: 2.2vw;
+  float: left;
+}
+
+.nav-bar-st {
+  height: 10vh !important;
+}
+
+.clear-search {
+  position: absolute !important;
+  border-radius: 50px !important;
+  margin-top: -0.2vh !important;
+  margin-left: -1vh !important;
+  height: 3vh !important;
+  width: 1.5vw !important;
+  cursor: pointer;
+}
+
+.clear-search:hover {
+  background-color: rgba(0, 119, 181, 0.5);
+  color: white;
+}
+
+.lst-items {
+  text-align: right;
+}
+
+.input-name{
+  height: 2.4375em !important;
 }
