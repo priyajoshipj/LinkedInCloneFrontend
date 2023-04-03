@@ -31,20 +31,23 @@ const SearchBar = (prop) => {
 
     /*Outside search box click to set search list null */
     const handleClickOutside = (e) => {
-        if (!refClick.current.contains(e.target)) {
-            setInputText("");
-            setSearchUserList([]);
+        if (refClick.current) {
+            if (!refClick.current.contains(e.target)) {
+                setInputText("");
+                setSearchUserList([]);
+            }
         }
     }
 
     useEffect(() => {
-        document.addEventListener("click", handleClickOutside, true)
+        document.addEventListener("mousedown", handleClickOutside, true);
     }, [])
 
     const routeChange = (userId) => {
+        setInputText("");
+        setSearchUserList([]);
         let path = `/profile/${userId}`;
         navigate(path);
-        navigate(0);
     };
 
     const onKeyDown = (e) => {
